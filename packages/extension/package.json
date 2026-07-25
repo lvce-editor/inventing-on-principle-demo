@@ -1,0 +1,13 @@
+{
+  "name": "@lvce-editor/inventing-on-principle-demo-extension",
+  "version": "0.0.0-dev",
+  "description": "Opens the Inventing on Principle live tree demo",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@lvce-editor/api": "^8.60.0"
+  },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.ts\""
+  }
+}

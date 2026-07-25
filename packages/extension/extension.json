@@ -1,0 +1,48 @@
+{
+  "id": "builtin.inventing-on-principle-demo",
+  "name": "Inventing on Principle Demo",
+  "description": "A live tree editing demo inspired by Bret Victor's Inventing on Principle",
+  "browser": "dist/extensionMain.js",
+  "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'"],
+  "isolated": true,
+  "categories": ["Other"],
+  "activation": ["onCommand:inventingOnPrinciple.openLiveTree", "onWebView:builtin.inventing-on-principle-demo.live-tree"],
+  "commands": [
+    {
+      "id": "inventingOnPrinciple.openLiveTree",
+      "label": "Inventing on Principle: Open Live Tree Demo"
+    }
+  ],
+  "rpc": [
+    {
+      "id": "builtin.inventing-on-principle-demo.live-tree-worker",
+      "type": "web-worker",
+      "name": "Live Tree Worker",
+      "url": "dist/liveTreeWorkerMain.js",
+      "contentSecurityPolicy": ["default-src 'none'"]
+    }
+  ],
+  "webViews": [
+    {
+      "id": "builtin.inventing-on-principle-demo.live-tree",
+      "name": "Live Tree",
+      "rpc": "builtin.inventing-on-principle-demo.live-tree-worker",
+      "selector": [".live-tree"],
+      "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'", "style-src 'self'"],
+      "elements": [
+        {
+          "type": "title",
+          "value": "Inventing on Principle · Live Tree"
+        },
+        {
+          "type": "script",
+          "path": "media/index.js"
+        },
+        {
+          "type": "css",
+          "path": "media/index.css"
+        }
+      ]
+    }
+  ]
+}
