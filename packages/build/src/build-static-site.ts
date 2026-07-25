@@ -1,19 +1,25 @@
-import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { cp, rm } from 'node:fs/promises'
 import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { root } from './root.ts'
 
-const siteDirectory = join(root, 'dist', 'site')
-const mediaDirectory = join(root, 'packages', 'extension', 'media')
-const pageSource = join(root, 'demo', 'live-tree.html')
+const sharedProcessPath = join(root, 'node_modules', '@lvce-editor', 'shared-process', 'index.js')
+const sharedProcessUrl = pathToFileURL(sharedProcessPath).toString()
+const sharedProcess = await import(sharedProcessUrl)
 
-await rm(siteDirectory, { force: true, recursive: true })
-await mkdir(siteDirectory, { recursive: true })
+process.env.PATH_PREFIX = '/inventing-on-principle-demo'
+const { commitHash } = await sharedProcess.exportStatic({
+  extensionPath: 'packages/extension',
+  root,
+  testPath: 'packages/e2e',
+})
 
-const sourceHtml = await readFile(pageSource, 'utf8')
-const publishedHtml = sourceHtml.replaceAll('../packages/extension/media/', './')
+const extensionId = 'builtin.inventing-on-principle-demo'
+await cp(join(root, 'packages', 'extension', 'dist'), join(root, 'dist', commitHash, 'extensions', extensionId, 'dist'), {
+  force: true,
+  recursive: true,
+})
 
-await Promise.all([
-  writeFile(join(siteDirectory, 'index.html'), publishedHtml),
-  copyFile(join(mediaDirectory, 'index.css'), join(siteDirectory, 'index.css')),
-  copyFile(join(mediaDirectory, 'index.js'), join(siteDirectory, 'index.js')),
-])
+const staticDirectory = join(root, '.tmp', 'static')
+await rm(staticDirectory, { force: true, recursive: true })
+await cp(join(root, 'dist'), staticDirectory, { recursive: true })

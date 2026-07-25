@@ -1,10 +1,7 @@
-import { activate as activateExtensionApi, executeCommand, registerCommand } from '@lvce-editor/api'
+import { activate as activateExtensionApi, registerCommand } from '@lvce-editor/api'
+import { openLiveTree } from './OpenLiveTree.ts'
 
 const commandId = 'inventingOnPrinciple.openLiveTree'
-const openLiveTree = async (): Promise<void> => {
-  await executeCommand('Layout.showMain')
-  await executeCommand('Main.openUri', 'inventing-on-principle.live-tree')
-}
 
 export const activate = async (): Promise<void> => {
   await activateExtensionApi()
