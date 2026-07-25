@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  pull_request: {}
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: npm run type-check
+      - run: npm run lint
+      - run: npx playwright install --with-deps chromium
+        working-directory: packages/e2e
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - run: npm run e2e:headless
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
