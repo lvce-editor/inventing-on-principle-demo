@@ -99,8 +99,8 @@ entire talk.
   so ordinary typing is enough to explore a large visual design space.
 - A deterministic rendering that makes each edit easy to compare with the last.
 - A polished initial program that is short enough to understand on screen.
-- Helpful recovery from incomplete intermediate syntax while retaining the last
-  valid output.
+- A source program that is compact enough for whole-value edits to stay in the
+  immediate feedback loop.
 
 ### Future fidelity targets
 
@@ -110,8 +110,8 @@ entire talk.
 - Code-to-output highlighting for the major drawing regions, followed by
   reverse output-to-code navigation.
 - Visual autocomplete and a color-literal palette.
-- Integration with a native LVCE text editor once scripted previews can rerun or
-  communicate changes without a custom code surface.
+- Helpful recovery from incomplete intermediate syntax while retaining the last
+  valid output.
 
 These are central to the original interaction, but they require editor and
 preview affordances beyond the native v1 path. They should not be implied in the
@@ -150,10 +150,13 @@ Those are source-backed scaffold capabilities only. They do **not** establish
 that LVCE already provides Victor-style literal scrubbing or code↔pixel
 provenance; those interactions belong to this demo's extension/UI.
 
-During implementation, the native HTML preview was tested directly. It
-reparsed changed markup and styles, but its update path did not rerun changed
-scripts, so a Canvas program could not honestly follow unsaved script edits.
-The v1 demo therefore uses LVCE's established custom-webview shape (an extension
-selector, web worker, and media script) and owns the immediate parse/render loop
-inside that surface. The six assignments are deliberately parsed rather than
-evaluated as arbitrary JavaScript.
+During implementation, direct testing found two missing pieces in LVCE's native
+path. The preview worker reparsed editor changes but did not rebuild its sandbox
+document or rerun changed scripts. Separately, reference nodes such as transferred
+Canvas elements ignored their serialized attributes during initial rendering and
+incremental diffing. Those defects were fixed in their owning repositories.
+
+The demo now uses the native HTML editor and preview. Its script runs in LVCE's
+preview sandbox, draws through a transferred `OffscreenCanvas`, and updates both
+the Canvas and ordinary DOM status text after unsaved editor changes. The static
+site is a generated LVCE build with the demo extension included.
