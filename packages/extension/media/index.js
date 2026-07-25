@@ -182,6 +182,10 @@ const initialize = async () => {
   return {}
 }
 
-globalThis.lvceRpc({
-  initialize,
-})
+if (typeof globalThis.lvceRpc === 'function') {
+  globalThis.lvceRpc({
+    initialize,
+  })
+} else {
+  initialize()
+}

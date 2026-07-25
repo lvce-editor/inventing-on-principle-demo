@@ -1,31 +1,25 @@
 # Inventing on Principle: Live Tree
 
-A small, playful demo of Bret Victor's principle that creators should have an
-immediate connection to what they create. Run one LVCE command and a real HTML
-source file opens beside its Canvas preview. Change the source—without saving or
-pressing Run—and the tree responds.
+A small, playful demo of Bret Victor's principle that creators should have an immediate connection to what they create. Change the tiny program on the left and its tree redraws on the right—without saving, pressing Run, or leaving the thought.
 
-This is an independent homage built with `@lvce-editor/server`, not a recreation
-of Victor's original environment. The first version focuses on its essential
-prerequisite: a tight edit/feedback loop. Numeric scrubbing and code-to-output
-provenance are documented future fidelity targets.
+This is an independent homage built with `@lvce-editor/server`, not a recreation of Victor's original environment. It focuses on the essential prerequisite: a tight edit/feedback loop. Numeric scrubbing and code-to-output provenance remain explicit future fidelity targets.
 
 ## Try it
 
-Requires Node 24.
+The standalone demo is published at [lvce-editor.github.io/inventing-on-principle-demo](https://lvce-editor.github.io/inventing-on-principle-demo/).
+
+To run it inside LVCE, use Node 24:
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Open <http://localhost:3000>, then run:
+Open <http://localhost:3000>, press F1, then run:
 
 > Inventing on Principle: Open Live Tree Demo
 
-The command opens [`demo/live-tree.html`](demo/live-tree.html) on the left and
-LVCE's native live HTML preview on the right. Start with these edits near the top
-of the file:
+The command opens a dedicated LVCE webview with its editable program and Canvas stage side by side. Start with these edits:
 
 | Parameter      | Try                       | What changes                       |
 | -------------- | ------------------------- | ---------------------------------- |
@@ -36,48 +30,38 @@ of the file:
 | `blossomCount` | `18` → `48`               | Pink blossoms fill the tips        |
 | `leafColor`    | `'#718355'` → `'#c46f3a'` | Summer turns to autumn             |
 
-There is no Run button in the loop and changes need not be saved. Even a
-temporary syntax error is safe: finish the edit and the preview recovers.
-Restore the starting source with:
-
-```sh
-git restore demo/live-tree.html
-```
+A temporary incomplete assignment does not blank or replace the output. The status explains what needs finishing while the last valid tree remains visible.
 
 ## How it works
 
-The extension contributes one command,
-`inventingOnPrinciple.openLiveTree`. It opens the tracked demo source with
-`Main.openUri`, shows the same URI through `Layout.showPreview`, and returns
-focus to the editor. LVCE's native preview follows the editor's unsaved document
-updates; the demo itself is a self-contained, deterministic HTML/Canvas program
-with no CDN, evaluator, or custom message bridge.
+The extension contributes `inventingOnPrinciple.openLiveTree`. The command opens an `inventing-on-principle.live-tree` resource, whose selector is handled by a purpose-built LVCE webview and worker.
 
-The browser e2e test exercises the complete interaction: command activation,
-split source/preview layout, unsaved depth changes, a syntax error, recovery, and
-idempotent reopening.
+The source surface intentionally accepts six constrained `const` assignments rather than evaluating arbitrary JavaScript. Each valid input event parses those values and synchronously redraws a deterministic recursive Canvas tree. This makes the feedback loop immediate, safe, and easy to compare.
+
+LVCE's current native HTML preview updates markup and styles when a document changes, but does not rerun changed scripts. Keeping the parse/render loop inside this focused webview avoids claiming a native scripted-preview capability that is not there yet. The webview and standalone page share the same JavaScript and CSS.
+
+## Static site and GitHub Pages
+
+```sh
+npm run build:site
+```
+
+This creates `dist/site/index.html` plus its local assets. CI builds and validates that artifact on every pull request. Successful `main` and manual workflows upload the same artifact and deploy it through GitHub Pages.
 
 ## Research
 
-The original tree sequence runs roughly from 3:20 to 9:35 in
-[_Inventing on Principle_](https://vimeo.com/906418692). It combines immediate
-redraw, literal scrubbing, discovery through continuous feedback, and
-bidirectional source/output navigation. See the
-[research note](docs/research.md) for a timestamped breakdown and the explicit
-v1 boundary.
+The original tree sequence runs roughly from 3:20 to 9:35 in [_Inventing on Principle_](https://vimeo.com/906418692). It combines immediate redraw, literal scrubbing, discovery through continuous feedback, and bidirectional source/output navigation. See the [research note](docs/research.md) for a timestamped breakdown and the explicit v1 boundary.
 
-Victor's broader explanation is also worth reading in
-[_Learnable Programming_](https://worrydream.com/LearnableProgramming/):
-instant updates are a prerequisite for a responsive creative medium, not the
-whole interaction design.
+Victor's broader explanation is also worth reading in [_Learnable Programming_](https://worrydream.com/LearnableProgramming/): instant updates are a prerequisite for a responsive creative medium, not the whole interaction design.
 
 ## Development
 
 ```sh
 npm run format
-npm run lint
+npm run build
 npm test
 npm run type-check
+npm run lint
 npm run e2e:headless
 ```
 
