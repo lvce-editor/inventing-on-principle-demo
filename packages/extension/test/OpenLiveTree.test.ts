@@ -7,6 +7,10 @@ void test('getLiveTreeUri appends the demo file without duplicating a slash', ()
   assert.equal(getLiveTreeUri('memfs:///workspace/'), 'memfs:///workspace/inventing-on-principle.html')
 })
 
+void test('getLiveTreeUri uses the in-memory file system without an open workspace', () => {
+  assert.equal(getLiveTreeUri(null), 'memfs:///inventing-on-principle.html')
+})
+
 void test('openLiveTree creates a native HTML editor and preview pair', async () => {
   const calls: unknown[][] = []
   await openLiveTree({

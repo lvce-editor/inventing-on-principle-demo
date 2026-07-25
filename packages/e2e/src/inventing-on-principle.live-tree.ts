@@ -29,7 +29,8 @@ export const test: Test = async ({ Command, Editor, expect, Extension, Locator }
   await expect(canvas).toHaveAttribute('height', '640')
   await expect(status).toContainText('511 branches')
 
-  const source = await Editor.getText()
-  await Editor.setText(source.replace('const depth = 8', 'const depth = 9'))
+  await Editor.setCursor(63, 20)
+  await Editor.selectCharacterRight()
+  await Editor.type('9')
   await waitForText(expect, status, '1023 branches')
 }

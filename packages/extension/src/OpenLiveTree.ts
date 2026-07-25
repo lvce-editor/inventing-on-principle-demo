@@ -3,7 +3,7 @@ import { liveTreeDocument } from './LiveTreeDocument.ts'
 
 export interface OpenLiveTreeDependencies {
   readonly executeCommand: (command: string, ...parameters: readonly unknown[]) => Promise<unknown>
-  readonly getWorkspaceUri: () => Promise<string>
+  readonly getWorkspaceUri: () => Promise<string | null>
   readonly writeFile: (uri: string, content: string) => Promise<void>
 }
 
@@ -13,8 +13,8 @@ const defaultDependencies: OpenLiveTreeDependencies = {
   writeFile,
 }
 
-export const getLiveTreeUri = (workspaceUri: string): string => {
-  return `${workspaceUri.replace(/\/$/, '')}/inventing-on-principle.html`
+export const getLiveTreeUri = (workspaceUri: string | null): string => {
+  return workspaceUri ? `${workspaceUri.replace(/\/$/, '')}/inventing-on-principle.html` : 'memfs:///inventing-on-principle.html'
 }
 
 export const openLiveTree = async (dependencies: OpenLiveTreeDependencies = defaultDependencies): Promise<void> => {
