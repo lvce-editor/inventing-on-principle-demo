@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "devDependencies": {
-    "@lvce-editor/api": "^8.75.0"
+    "@lvce-editor/api": "^9.18.0"
   },
   "scripts": {
     "test": "node --test \"test/**/*.test.ts\""
