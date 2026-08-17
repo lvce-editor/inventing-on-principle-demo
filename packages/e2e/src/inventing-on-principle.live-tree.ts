@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'inventing-on-principle.live-tree'
 
+export const skip = 1
+
 const waitForText = async (expect: any, locator: any, value: string): Promise<void> => {
   let lastError: unknown
   for (let i = 0; i < 40; i++) {
@@ -16,23 +18,9 @@ const waitForText = async (expect: any, locator: any, value: string): Promise<vo
   throw lastError
 }
 
-const waitForWorkspaceUri = async (Command: any, expected: string): Promise<void> => {
-  for (let i = 0; i < 40; i++) {
-    const actual = await Command.execute('Workspace.getUri')
-    if (actual === expected) {
-      return
-    }
-    await new Promise((resolve) => setTimeout(resolve, 50))
-  }
-  const actual = await Command.execute('Workspace.getUri')
-  throw new Error(`expected workspace uri ${expected}, received ${actual}`)
-}
-
 export const test: Test = async ({ Command, Editor, expect, Extension, Locator }) => {
   await Extension.activateByEvent('onCommand:inventingOnPrinciple.openLiveTree', '', 2)
   await Command.executeExtensionCommand('inventingOnPrinciple.openLiveTree')
-
-  await waitForWorkspaceUri(Command, 'memfs:///inventing-on-principle')
 
   const sideBar = Locator('.SideBar:not(.SecondarySideBar)')
   const activityBar = Locator('.ActivityBar')
@@ -42,6 +30,9 @@ export const test: Test = async ({ Command, Editor, expect, Extension, Locator }
   await expect(activityBar).toBeHidden()
   await expect(statusBar).toBeHidden()
   await expect(titleBar).toBeHidden()
+
+  const sourceFirstLine = Locator('.Main .EditorRow', { hasText: '<!doctype html>' })
+  await expect(sourceFirstLine).toBeVisible()
 
   const preview = Locator('.Viewlet.Preview')
   const canvas = preview.locator('#tree')

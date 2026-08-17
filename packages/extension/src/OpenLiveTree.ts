@@ -23,5 +23,4 @@ export const openLiveTree = async (dependencies: OpenLiveTreeDependencies = defa
   await dependencies.executeCommand('Layout.hideActivityBar')
   await dependencies.executeCommand('Layout.hideStatusBar')
   await dependencies.executeCommand('Layout.hideTitleBar')
-  await dependencies.executeCommand('Workspace.setUri', workspaceUri)
 }
