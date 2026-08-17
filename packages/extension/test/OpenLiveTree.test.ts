@@ -1,34 +1,29 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { liveTreeDocument } from '../src/LiveTreeDocument.ts'
-import { getLiveTreeUri, openLiveTree } from '../src/OpenLiveTree.ts'
+import { liveTreeUri, openLiveTree, workspaceUri } from '../src/OpenLiveTree.ts'
 
-void test('getLiveTreeUri appends the demo file without duplicating a slash', () => {
-  assert.equal(getLiveTreeUri('memfs:///workspace/'), 'memfs:///workspace/inventing-on-principle.html')
-})
-
-void test('getLiveTreeUri uses the in-memory file system without an open workspace', () => {
-  assert.equal(getLiveTreeUri(null), 'memfs:///inventing-on-principle.html')
-})
-
-void test('openLiveTree creates a native HTML editor and preview pair', async () => {
+void test('openLiveTree creates a focused native HTML editor and preview workspace', async () => {
   const calls: unknown[][] = []
   await openLiveTree({
     executeCommand: async (...parameters) => {
       calls.push(['executeCommand', ...parameters])
     },
-    getWorkspaceUri: async () => 'memfs:///workspace',
     writeFile: async (...parameters) => {
       calls.push(['writeFile', ...parameters])
     },
   })
 
-  const uri = 'memfs:///workspace/inventing-on-principle.html'
   assert.deepEqual(calls, [
-    ['writeFile', uri, liveTreeDocument],
+    ['writeFile', liveTreeUri, liveTreeDocument],
     ['executeCommand', 'Layout.showMain'],
-    ['executeCommand', 'Main.openUri', uri],
-    ['executeCommand', 'Layout.showPreview', uri],
+    ['executeCommand', 'Main.openUri', liveTreeUri],
+    ['executeCommand', 'Layout.showPreview', liveTreeUri],
+    ['executeCommand', 'Layout.hideSideBar'],
+    ['executeCommand', 'Layout.hideActivityBar'],
+    ['executeCommand', 'Layout.hideStatusBar'],
+    ['executeCommand', 'Layout.hideTitleBar'],
+    ['executeCommand', 'Workspace.setUri', workspaceUri],
   ])
 })
 
