@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { liveTreeDocument } from '../src/LiveTreeDocument.ts'
-import { liveTreeUri, openLiveTree, workspaceUri } from '../src/OpenLiveTree.ts'
+import { liveTreeUri, openLiveTree } from '../src/OpenLiveTree.ts'
 
 void test('openLiveTree creates a focused native HTML editor and preview workspace', async () => {
   const calls: unknown[][] = []
@@ -23,7 +23,6 @@ void test('openLiveTree creates a focused native HTML editor and preview workspa
     ['executeCommand', 'Layout.hideActivityBar'],
     ['executeCommand', 'Layout.hideStatusBar'],
     ['executeCommand', 'Layout.hideTitleBar'],
-    ['executeCommand', 'Workspace.setUri', workspaceUri],
   ])
 })
 
