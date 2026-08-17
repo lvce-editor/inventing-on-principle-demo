@@ -15,6 +15,7 @@ void test('openLiveTree creates a focused native HTML editor and preview workspa
   })
 
   assert.deepEqual(calls, [
+    ['executeCommand', 'GetActiveEditor.getOpenEditorUris'],
     ['writeFile', liveTreeUri, liveTreeDocument],
     ['executeCommand', 'Layout.showMain'],
     ['executeCommand', 'Main.openUri', liveTreeUri],
@@ -23,6 +24,28 @@ void test('openLiveTree creates a focused native HTML editor and preview workspa
     ['executeCommand', 'Layout.hideActivityBar'],
     ['executeCommand', 'Layout.hideStatusBar'],
     ['executeCommand', 'Layout.hideTitleBar'],
+  ])
+})
+
+void test('openLiveTree replaces a restored stale live tree editor', async () => {
+  const calls: unknown[][] = []
+  await openLiveTree({
+    executeCommand: async (...parameters) => {
+      calls.push(['executeCommand', ...parameters])
+      if (parameters[0] === 'GetActiveEditor.getOpenEditorUris') {
+        return [liveTreeUri]
+      }
+    },
+    writeFile: async (...parameters) => {
+      calls.push(['writeFile', ...parameters])
+    },
+  })
+
+  assert.deepEqual(calls.slice(0, 4), [
+    ['executeCommand', 'GetActiveEditor.getOpenEditorUris'],
+    ['executeCommand', 'Main.openUri', liveTreeUri],
+    ['executeCommand', 'Main.closeActiveEditor'],
+    ['writeFile', liveTreeUri, liveTreeDocument],
   ])
 })
 

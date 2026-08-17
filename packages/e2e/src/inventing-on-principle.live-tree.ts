@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'inventing-on-principle.live-tree'
 
-export const skip = 1
-
 const waitForText = async (expect: any, locator: any, value: string): Promise<void> => {
   let lastError: unknown
   for (let i = 0; i < 40; i++) {
@@ -41,6 +39,10 @@ export const test: Test = async ({ Command, Editor, expect, Extension, Locator }
   await expect(canvas).toBeVisible()
   await expect(canvas).toHaveAttribute('width', '960')
   await expect(canvas).toHaveAttribute('height', '640')
+  await expect(status).toContainText('511 branches')
+
+  await Command.executeExtensionCommand('inventingOnPrinciple.openLiveTree')
+  await expect(sourceFirstLine).toBeVisible()
   await expect(status).toContainText('511 branches')
 
   await Editor.setCursor(63, 20)
