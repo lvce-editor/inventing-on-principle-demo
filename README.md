@@ -19,7 +19,7 @@ Open <http://localhost:3000>, press F1, then run:
 
 > Inventing on Principle: Open Live Tree Demo
 
-The command writes a small HTML program into the current workspace, opens it in LVCE's text editor, and shows LVCE's native preview on the right. Start with these edits:
+The command creates a dedicated in-memory workspace, writes a small HTML program into it, opens it in LVCE's text editor, and shows LVCE's native preview on the right. It also hides the surrounding navigation and window chrome to keep the editing loop focused. Start with these edits:
 
 | Parameter     | Try                       | What changes                       |
 | ------------- | ------------------------- | ---------------------------------- |
