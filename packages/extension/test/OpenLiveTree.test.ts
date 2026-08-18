@@ -3,7 +3,7 @@ import test from 'node:test'
 import { liveTreeDocument } from '../src/LiveTreeDocument.ts'
 import { liveTreeUri, openLiveTree } from '../src/OpenLiveTree.ts'
 
-void test('openLiveTree creates a focused native HTML editor and preview workspace', async () => {
+void test('openLiveTree closes existing editors and creates a focused HTML editor and preview workspace', async () => {
   const calls: unknown[][] = []
   await openLiveTree({
     executeCommand: async (...parameters) => {
@@ -15,37 +15,16 @@ void test('openLiveTree creates a focused native HTML editor and preview workspa
   })
 
   assert.deepEqual(calls, [
-    ['executeCommand', 'GetActiveEditor.getOpenEditorUris'],
+    ['executeCommand', 'Main.closeAllEditors'],
     ['writeFile', liveTreeUri, liveTreeDocument],
     ['executeCommand', 'Layout.showMain'],
     ['executeCommand', 'Main.openUri', liveTreeUri],
     ['executeCommand', 'Layout.showPreview', liveTreeUri],
+    ['executeCommand', 'Layout.hidePanel'],
     ['executeCommand', 'Layout.hideSideBar'],
     ['executeCommand', 'Layout.hideActivityBar'],
     ['executeCommand', 'Layout.hideStatusBar'],
     ['executeCommand', 'Layout.hideTitleBar'],
-  ])
-})
-
-void test('openLiveTree replaces a restored stale live tree editor', async () => {
-  const calls: unknown[][] = []
-  await openLiveTree({
-    executeCommand: async (...parameters) => {
-      calls.push(['executeCommand', ...parameters])
-      if (parameters[0] === 'GetActiveEditor.getOpenEditorUris') {
-        return [liveTreeUri]
-      }
-    },
-    writeFile: async (...parameters) => {
-      calls.push(['writeFile', ...parameters])
-    },
-  })
-
-  assert.deepEqual(calls.slice(0, 4), [
-    ['executeCommand', 'GetActiveEditor.getOpenEditorUris'],
-    ['executeCommand', 'Main.openUri', liveTreeUri],
-    ['executeCommand', 'Main.closeActiveEditor'],
-    ['writeFile', liveTreeUri, liveTreeDocument],
   ])
 })
 
