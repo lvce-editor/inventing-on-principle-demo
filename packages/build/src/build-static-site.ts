@@ -10,6 +10,13 @@ const sharedProcess = await import(sharedProcessUrl)
 process.env.PATH_PREFIX = '/inventing-on-principle-demo'
 const { commitHash } = await sharedProcess.exportStatic({
   extensionPath: 'packages/extension',
+  onLoadCommands: [
+    {
+      args: [],
+      command: 'inventingOnPrinciple.openLiveTree',
+      name: 'Setup Demo',
+    },
+  ],
   root,
   testPath: 'packages/e2e',
 })
