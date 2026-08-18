@@ -16,7 +16,13 @@ const waitForText = async (expect: any, locator: any, value: string): Promise<vo
   throw lastError
 }
 
-export const test: Test = async ({ Command, Editor, expect, Locator }) => {
+export const test: Test = async ({ Command, Editor, expect, Extension, Locator }) => {
+  await Extension.activateByEvent('onCommand:inventingOnPrinciple.openLiveTree', '', 2)
+  await Command.executeExtensionCommand('inventingOnPrinciple.openLiveTree')
+
+  const sourceFirstLine = Locator('.Main .EditorRow', { hasText: '<!doctype html>' })
+  await expect(sourceFirstLine).toBeVisible()
+
   const sideBar = Locator('.SideBar:not(.SecondarySideBar)')
   const activityBar = Locator('.ActivityBar')
   const statusBar = Locator('.StatusBar')
@@ -25,9 +31,6 @@ export const test: Test = async ({ Command, Editor, expect, Locator }) => {
   await expect(activityBar).toBeHidden()
   await expect(statusBar).toBeHidden()
   await expect(titleBar).toBeHidden()
-
-  const sourceFirstLine = Locator('.Main .EditorRow', { hasText: '<!doctype html>' })
-  await expect(sourceFirstLine).toBeVisible()
 
   const preview = Locator('.Viewlet.Preview')
   const canvas = preview.locator('#tree')
