@@ -16,17 +16,27 @@ const waitForText = async (expect: any, locator: any, value: string): Promise<vo
   throw lastError
 }
 
-export const test: Test = async ({ Command, Editor, expect, Extension, Locator }) => {
+export const test: Test = async ({ Command, Editor, expect, Extension, FileSystem, Locator, Main }) => {
+  const tmpDir = await FileSystem.getTmpDir()
+  const otherUri = `${tmpDir}/other.html`
+  await FileSystem.writeFile(otherUri, '<p>Other editor</p>')
+  await Main.openUri(otherUri)
+  await Command.execute('Layout.showPanel', 'Problems')
+
   await Extension.activateByEvent('onCommand:inventingOnPrinciple.openLiveTree', '', 2)
   await Command.executeExtensionCommand('inventingOnPrinciple.openLiveTree')
 
   const sourceFirstLine = Locator('.Main .EditorRow', { hasText: '<!doctype html>' })
   await expect(sourceFirstLine).toBeVisible()
 
+  const editorTabs = Locator('.MainTab')
+  const panel = Locator('.Panel')
   const sideBar = Locator('.SideBar:not(.SecondarySideBar)')
   const activityBar = Locator('.ActivityBar')
   const statusBar = Locator('.StatusBar')
   const titleBar = Locator('.TitleBar')
+  await expect(editorTabs).toHaveCount(1)
+  await expect(panel).toBeHidden()
   await expect(sideBar).toBeHidden()
   await expect(activityBar).toBeHidden()
   await expect(statusBar).toBeHidden()
@@ -42,6 +52,7 @@ export const test: Test = async ({ Command, Editor, expect, Extension, Locator }
   await expect(status).toContainText('511 branches')
 
   await Command.executeExtensionCommand('inventingOnPrinciple.openLiveTree')
+  await expect(editorTabs).toHaveCount(1)
   await expect(sourceFirstLine).toBeVisible()
   await expect(status).toContainText('511 branches')
 
