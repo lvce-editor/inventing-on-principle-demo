@@ -6,7 +6,7 @@ This is an independent homage built with `@lvce-editor/server`, not a recreation
 
 ## Try it
 
-The static LVCE build is published at [lvce-editor.github.io/inventing-on-principle-demo](https://lvce-editor.github.io/inventing-on-principle-demo/). Press F1 there and run the demo command below.
+The static LVCE build is published at [lvce-editor.github.io/inventing-on-principle-demo](https://lvce-editor.github.io/inventing-on-principle-demo/). It opens the live tree demo automatically.
 
 To run it inside LVCE, use Node 24:
 

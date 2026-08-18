@@ -16,10 +16,7 @@ const waitForText = async (expect: any, locator: any, value: string): Promise<vo
   throw lastError
 }
 
-export const test: Test = async ({ Command, Editor, expect, Extension, Locator }) => {
-  await Extension.activateByEvent('onCommand:inventingOnPrinciple.openLiveTree', '', 2)
-  await Command.executeExtensionCommand('inventingOnPrinciple.openLiveTree')
-
+export const test: Test = async ({ Command, Editor, expect, Locator }) => {
   const sideBar = Locator('.SideBar:not(.SecondarySideBar)')
   const activityBar = Locator('.ActivityBar')
   const statusBar = Locator('.StatusBar')
