@@ -26,10 +26,13 @@ export const test: Test = async ({ Command, Editor, expect, Extension, FileSyste
   await Extension.activateByEvent('onCommand:inventingOnPrinciple.openLiveTree', '', 2)
   await Command.executeExtensionCommand('inventingOnPrinciple.openLiveTree')
 
-  const sourceFirstLine = Locator('.Main .EditorRow', { hasText: '// Try depth:' })
+  const editorTabs = Locator('.MainTab')
+  await expect(editorTabs).toHaveCount(2)
+  const selectedJavaScriptTab = Locator('.MainTab.MainTabSelected[title$="inventing-on-principle.js"]')
+  await expect(selectedJavaScriptTab).toBeVisible()
+  const sourceFirstLine = Locator('.Main .EditorRow', { hasText: 'const depth = 8' })
   await expect(sourceFirstLine).toBeVisible()
 
-  const editorTabs = Locator('.MainTab')
   const panel = Locator('.Panel')
   const sideBar = Locator('.SideBar:not(.SecondarySideBar)')
   const activityBar = Locator('.ActivityBar')
