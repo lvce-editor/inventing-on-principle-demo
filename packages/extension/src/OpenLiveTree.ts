@@ -1,5 +1,5 @@
 import { executeCommand, writeFile } from '@lvce-editor/api'
-import { liveTreeDocument } from './LiveTreeDocument.ts'
+import { liveTreeCss, liveTreeHtml, liveTreeJavaScript } from './LiveTreeDocuments.ts'
 
 export interface OpenLiveTreeDependencies {
   readonly executeCommand: (command: string, ...parameters: readonly unknown[]) => Promise<unknown>
@@ -12,14 +12,19 @@ const defaultDependencies: OpenLiveTreeDependencies = {
 }
 
 export const workspaceUri = 'memfs:///inventing-on-principle'
-export const liveTreeUri = `${workspaceUri}/inventing-on-principle.html`
+export const liveTreeHtmlUri = `${workspaceUri}/inventing-on-principle.html`
+export const liveTreeCssUri = `${workspaceUri}/inventing-on-principle.css`
+export const liveTreeJavaScriptUri = `${workspaceUri}/inventing-on-principle.js`
 
 export const openLiveTree = async (dependencies: OpenLiveTreeDependencies = defaultDependencies): Promise<void> => {
   await dependencies.executeCommand('Main.closeAllEditors')
-  await dependencies.writeFile(liveTreeUri, liveTreeDocument)
+  await dependencies.writeFile(liveTreeHtmlUri, liveTreeHtml)
+  await dependencies.writeFile(liveTreeCssUri, liveTreeCss)
+  await dependencies.writeFile(liveTreeJavaScriptUri, liveTreeJavaScript)
   await dependencies.executeCommand('Layout.showMain')
-  await dependencies.executeCommand('Main.openUri', liveTreeUri)
-  await dependencies.executeCommand('Layout.showPreview', liveTreeUri)
+  await dependencies.executeCommand('Main.openUri', liveTreeHtmlUri)
+  await dependencies.executeCommand('Layout.showPreview', liveTreeHtmlUri)
+  await dependencies.executeCommand('Main.openUri', liveTreeJavaScriptUri)
   await dependencies.executeCommand('Layout.hidePanel')
   await dependencies.executeCommand('Layout.hideSideBar')
   await dependencies.executeCommand('Layout.hideActivityBar')

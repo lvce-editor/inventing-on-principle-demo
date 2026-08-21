@@ -26,7 +26,7 @@ export const test: Test = async ({ Command, Editor, expect, Extension, FileSyste
   await Extension.activateByEvent('onCommand:inventingOnPrinciple.openLiveTree', '', 2)
   await Command.executeExtensionCommand('inventingOnPrinciple.openLiveTree')
 
-  const sourceFirstLine = Locator('.Main .EditorRow', { hasText: '<!doctype html>' })
+  const sourceFirstLine = Locator('.Main .EditorRow', { hasText: '// Try depth:' })
   await expect(sourceFirstLine).toBeVisible()
 
   const editorTabs = Locator('.MainTab')
@@ -35,7 +35,7 @@ export const test: Test = async ({ Command, Editor, expect, Extension, FileSyste
   const activityBar = Locator('.ActivityBar')
   const statusBar = Locator('.StatusBar')
   const titleBar = Locator('.TitleBar')
-  await expect(editorTabs).toHaveCount(1)
+  await expect(editorTabs).toHaveCount(2)
   await expect(panel).toBeHidden()
   await expect(sideBar).toBeHidden()
   await expect(activityBar).toBeHidden()
@@ -52,11 +52,11 @@ export const test: Test = async ({ Command, Editor, expect, Extension, FileSyste
   await expect(status).toContainText('511 branches')
 
   await Command.executeExtensionCommand('inventingOnPrinciple.openLiveTree')
-  await expect(editorTabs).toHaveCount(1)
+  await expect(editorTabs).toHaveCount(2)
   await expect(sourceFirstLine).toBeVisible()
   await expect(status).toContainText('511 branches')
 
-  await Editor.setCursor(63, 20)
+  await Editor.setCursor(1, 14)
   await Editor.selectCharacterRight()
   await Editor.type('9')
   await waitForText(expect, status, '1023 branches')

@@ -69,7 +69,7 @@ const browser = await chromium.launch({ headless: true })
 try {
   const page = await browser.newPage()
   const url = `http://127.0.0.1:${address.port}${pathPrefix}/`
-  const sourceFirstLine = page.locator('.Main .EditorRow', { hasText: '<!doctype html>' })
+  const sourceFirstLine = page.locator('.Main .EditorRow', { hasText: '// Try depth:' })
   const previewCanvas = page.locator('.Viewlet.Preview #tree')
 
   await page.goto(url)
