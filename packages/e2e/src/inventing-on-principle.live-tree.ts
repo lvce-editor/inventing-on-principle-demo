@@ -2,20 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'inventing-on-principle.live-tree'
 
-const waitForText = async (expect: any, locator: any, value: string): Promise<void> => {
-  let lastError: unknown
-  for (let i = 0; i < 40; i++) {
-    try {
-      await expect(locator).toContainText(value)
-      return
-    } catch (error) {
-      lastError = error
-      await new Promise((resolve) => setTimeout(resolve, 50))
-    }
-  }
-  throw lastError
-}
-
 export const test: Test = async ({ Command, Editor, expect, Extension, FileSystem, Locator, Main }) => {
   const tmpDir = await FileSystem.getTmpDir()
   const otherUri = `${tmpDir}/other.html`
@@ -62,5 +48,5 @@ export const test: Test = async ({ Command, Editor, expect, Extension, FileSyste
   await Editor.setCursor(1, 14)
   await Editor.selectCharacterRight()
   await Editor.type('9')
-  await waitForText(expect, status, '1023 branches')
+  await expect(status).toContainText('1023 branches')
 }
