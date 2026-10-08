@@ -1,4 +1,4 @@
-import { cp, rm } from 'node:fs/promises'
+import { cp, readFile, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { root } from './root.ts'
@@ -20,6 +20,11 @@ const { commitHash } = await sharedProcess.exportStatic({
   root,
   testPath: 'packages/e2e',
 })
+
+const defaultSettingsPath = join(root, 'dist', commitHash, 'config', 'defaultSettings.json')
+const defaultSettings = JSON.parse(await readFile(defaultSettingsPath, 'utf8'))
+defaultSettings['application.useOnLoadJson'] = true
+await writeFile(defaultSettingsPath, `${JSON.stringify(defaultSettings, null, 2)}\n`)
 
 const extensionId = 'builtin.inventing-on-principle-demo'
 await cp(join(root, 'packages', 'extension', 'dist'), join(root, 'dist', commitHash, 'extensions', extensionId, 'dist'), {
